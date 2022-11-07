@@ -1,6 +1,6 @@
 <template>
   <div>
-    <nav class="navbar navbar-light justify-content-between">
+    <nav class="navbar navbar-light justify-content-between" style="position: fixed; top: 0; z-index: 10; width: 100%">
         <div>
             <i class="fa fa-chevron-left mr-3" aria-hidden="true" @click="this.$router.push('products')"></i><a class="navbar-brand text-white">NutriGreen</a>
         </div>
@@ -18,7 +18,7 @@
             <h4 class="text-secondary mx-auto text-center">No item(s) in cart</h4>
             <button class="btn mx-auto mt-4" style="width: 250px" @click="this.$router.push('products')"> Continue Shopping</button>
         </div>
-        <div v-if="cart.length > 0">
+        <div style="overflow-y: scroll; height: 30rem" class="justify-content-center" v-if="cart.length > 0">
             <div class="row py-3" v-for="(item, index) in cart" :key="item.id">
                 <div class="col-4">
                     <img :src="item.product_photo" class="img-fluid" alt="" style="width: 200px">
@@ -37,12 +37,12 @@
                 <div class="col-2 d-flex justify-content-end">
                     <i class="fa fa-trash" style="color: darkred; font-size: 24px" @click="removeFromCart(item)"></i>
                 </div>
-            </div>
+            </div>            
+        </div>
 
-            <div class="d-flex justify-content-between my-4">
-                <h4>Total</h4>
-                <h4 class="total">₦{{formatPrice(subtotal)}}</h4>
-            </div>
+        <div v-if="cart.length > 0" class="d-flex justify-content-between my-4">
+            <h4>Total</h4>
+            <h4 class="total">₦{{formatPrice(subtotal)}}</h4>
         </div>
     </div>
 
@@ -125,7 +125,7 @@ export default {
 }
 .row{
     border-bottom: 1px solid rgb(218, 218, 218);
-    margin: 12px 0px;
+    margin: 12px 0;
 }
 
 .product-title {
@@ -140,9 +140,13 @@ button {
 }
 
 .top-page{
-    padding-bottom: 18px;
+    padding: 18px 0;
     border-bottom: 1px solid rgb(218, 218, 218);
-    margin-top: 32px;
+    background: white
+}
+
+.container {
+    margin-top: 70px;
 }
 
 .container .page-title{

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <nav class="navbar navbar-light justify-content-between">
+    <nav class="navbar navbar-light justify-content-between" style="position: fixed; top: 0; z-index: 10; width: 100%">
         <div>
             <i class="fa fa-chevron-left mr-3" aria-hidden="true" @click="this.$router.push('index')"></i><a class="navbar-brand text-white">NutriGreen</a>
         </div>
@@ -312,12 +312,16 @@ export default {
         color: var(--green)
     }
     .row {
-        margin: 32px 40px;
+        margin: 0 40px;
+        position: absolute; 
+        top: 80px;
+        
     }
 
     @media only screen and (max-width:799px) {
         .row {
-            margin: 32px 16px;
+            margin: 0 16px;
+            top: 120px
         }
 
         .row .product-card {
