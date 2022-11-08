@@ -80,6 +80,7 @@ export default {
             this.$store.state.cart.forEach(i => {
                 sum += Number(i.product_price * i.quantity);
             });
+            this.$store.commit('setTotalAmount', sum)
             return sum;      
         },
     },

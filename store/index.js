@@ -5,7 +5,8 @@ const store = createStore({
   state() {
     return {
       products: [],
-      cart: []
+      cart: [],
+      total_ammount: ''
     };
   },
   getters: {
@@ -23,6 +24,9 @@ const store = createStore({
     },
     setProducts(state, data){
       state.products = data
+    },
+    setTotalAmount(state, data){
+      state.total_ammount = data
     },
   }
 });

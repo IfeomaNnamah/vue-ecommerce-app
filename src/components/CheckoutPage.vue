@@ -25,7 +25,11 @@
                     <input type="text" placeholder="Enter Phone Number" class="form-control">
 
                     <h6 class="mt-3">Delivery Address</h6>
-                    <input type="text" placeholder="Enter Delivery Address" class="form-control">    
+                    <select class="form-control">
+                        <option value="" selected disabled>Select Delivery Address</option>
+                        <option value="">Marigold street, Ajah</option>
+                        <option value="">George Omonubi, Oniru</option>
+                    </select>   
 
                     <button class="btn btn-block" @click="openPaymentOption">Proceed to Payment</button>           
                     
@@ -60,6 +64,11 @@
                         <option value="flutterwave">Flutterwave</option>
                         <option selected value="payme">Payme</option>
                     </select>
+
+                    <div class="d-flex justify-content-between align-items-center mt-3" >
+                        <h6>Total Amount</h6>
+                        <h4 style="color: var(--green)">₦{{ formatPrice(this.$store.state.total_ammount)}}</h4>
+                    </div>
 
                     <h6 class="mt-3">Payment Description</h6>
                     <p>
@@ -127,6 +136,11 @@ export default {
         openPaymentDetails(){
             $('#closeCheckoutModal2').click()
             $('#paymentDetailsModaltrigger').click()
+        },
+
+        formatPrice (price) {
+            price = price ? price : 0;
+            return (price).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') // with 2 d.p
         }
     }
 }

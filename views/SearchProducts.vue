@@ -5,7 +5,7 @@
             <i class="fa fa-chevron-left mr-3" aria-hidden="true" @click="this.$router.push('index')"></i><a class="navbar-brand text-white">NutriGreen</a>
         </div>
         <form class="form-inline">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search Products" aria-label="Search">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search Products" aria-label="Search" v-model="search_value" @keyup="searchProducts">
         </form>
         <div class="pt-2" style="cursor: pointer" @click="this.$router.push('cart')">
             <i class="fa fa-shopping-cart" aria-hidden="true"></i>
@@ -15,7 +15,7 @@
 
     <div class="row">
         
-        <div class="product-card d-flex" v-for="(product, index) in products" :key="product.id">
+        <div class="product-card d-flex" v-for="(product, index) in filteredProduct" :key="product.id">
             <div style="box-shadow: rgba(110, 110, 110, 0.2) 0px 24px 30px -10px;">
                 <img :src="product.product_photo" class="img-fluid" alt="" data-bs-toggle="modal" data-bs-target="#productDetail" @click="getProductDetails(product.id)">
                 <h5 class="product-title">{{truncate(product.product_name, 24)}}</h5>
@@ -88,6 +88,7 @@ export default {
     data() {
         return {
             products: this.$store.state.products,
+            filteredProduct: this.$store.state.products,
             selectedProduct: [
                 {
                     id: '',
@@ -101,7 +102,8 @@ export default {
                     unit: '',
                     stockqty: ''
                 },
-            ]
+            ],
+            search_value: ''
         }
     },
     setup() {
@@ -165,6 +167,13 @@ export default {
             if(str.length > 0){
                 return (str.length > maxlength) ? str.slice(0, maxlength - 1) + '…' : str;
             }           
+        },
+        searchProducts(){
+            if(this.search_value !== ''){
+                this.filteredProduct = this.products.filter(product => product.product_name.toLowerCase().includes(this.search_value))
+            }else{
+                this.filteredProduct = this.products
+            }
         },
         addToCart(product){
             if(product.stockqty > 0){
@@ -316,6 +325,12 @@ export default {
         position: absolute; 
         top: 80px;
         
+    }
+
+    .navbar .form-inline input:focus {
+        background: transparent;
+        border: 1px solid greenyellow;
+        color: white
     }
 
     @media only screen and (max-width:799px) {
