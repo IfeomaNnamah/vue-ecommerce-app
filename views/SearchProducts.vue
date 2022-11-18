@@ -17,7 +17,7 @@
         
         <div class="product-card d-flex" v-for="(product, index) in filteredProduct" :key="product.Title">
             <div style="box-shadow: rgba(110, 110, 110, 0.2) 0px 24px 30px -10px;">
-                <img src="https://jebsengroup.sharepoint.com/sites/Group-eForms/SiteAssets/Lists/48eb319e-ca46-43c2-bbc2-86ae3d17b3f6/純蟲草.jpg" class="img-fluid" alt="" data-bs-toggle="modal" data-bs-target="#productDetail" @click="getProductDetails(product.Title)">
+                <img :src="'https://jebsengroup.sharepoint.com'+ JSON.parse(product.ItemImages).serverRelativeUrl" class="img-fluid" alt="" data-bs-toggle="modal" data-bs-target="#productDetail" @click="getProductDetails(product.Title)">
                 <!-- <div style="width: 100%; height: 150px; background: whitesmoke" @click="getProductDetails(product.Title)" data-bs-toggle="modal" data-bs-target="#productDetail"></div> -->
                 <h5 class="product-title">{{truncate(product.ItemName, 24)}}</h5>
                 <h4 class="product-price">SRP: <span>${{formatPrice(product.SRP)}}</span></h4>
