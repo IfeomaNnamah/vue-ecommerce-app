@@ -12,6 +12,13 @@ export default {
         return {
             
         }
+    },
+    mounted () {      
+      this.$store.dispatch('getAccessToken')
+      this.$store.dispatch('getProductList')
+    },
+    methods: {
+
     }
 }
 </script>

@@ -27,8 +27,7 @@
                     <h6 class="mt-3">Delivery Address</h6>
                     <select class="form-control">
                         <option value="" selected disabled>Select Delivery Address</option>
-                        <option value="">Marigold street, Ajah</option>
-                        <option value="">George Omonubi, Oniru</option>
+                        <option v-for="location in locations" :key="location.Locations" :value="location.Locations">{{ location.Locations }}</option>
                     </select>   
 
                     <button class="btn btn-block" @click="openPaymentOption">Proceed to Payment</button>           
@@ -60,20 +59,18 @@
 
                 <div class="modal-body">                    
                     <h6>Payment Method</h6>
-                    <select name="" id="" class="form-control">
-                        <option value="flutterwave">Flutterwave</option>
-                        <option selected value="payme">Payme</option>
+                    <select name="" id="" class="form-control" v-model="selectedMethod" @change="getSelectedMethod()">
+                        <option v-for="method in payment_methods" :key="method.Payme" :value="method.Payme">{{ method.Payme }}</option>
                     </select>
 
                     <div class="d-flex justify-content-between align-items-center mt-3" >
                         <h6>Total Amount</h6>
-                        <h4 style="color: var(--green)">₦{{ formatPrice(this.$store.state.total_ammount)}}</h4>
+                        <h4 style="color: var(--green)">${{ formatPrice(this.$store.state.total_ammount)}}</h4>
                     </div>
 
                     <h6 class="mt-3">Payment Description</h6>
                     <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
+                        {{ this.paymentDesc[0] ? this.paymentDesc[0].PaymentDescriptions : '' }}
                     </p>
 
                     <h6 class="mt-4">Upload Proof of Payment</h6>
@@ -108,12 +105,11 @@
 
                 <div class="modal-body">                    
                     <h6>Payment Method</h6>
-                    <p>Payme</p>
+                    <p>{{ this.paymentDesc[0] ? this.paymentDesc[0].Payme : '' }}</p>
 
                     <h6 class="mt-3">Payment Instructions</h6>
                     <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
+                        {{ this.paymentDesc[0] ? this.paymentDesc[0].PaymentInstructions : '' }}
                     </p>    
 
                     <button class="btn btn-block">Link to Payment</button>           
@@ -127,6 +123,23 @@
 <script>
 import * as $ from 'jquery'
 export default {
+    data (){
+        return {
+            locations: [],
+            payment_methods: [],
+            paymentDesc: '',
+            selectedMethod: ''
+        }
+    },
+    mounted() {
+        this.$store.dispatch('getDeliveryAddresses').then(() => {
+            this.locations = this.$store.state.delivery_addresses
+        })
+
+        this.$store.dispatch('getPaymentMethods').then(() => {
+            this.payment_methods = this.$store.state.payment_methods
+        })
+    },
     methods: {
         openPaymentOption(){
             $('#closeCheckoutModal1').click()
@@ -141,6 +154,11 @@ export default {
         formatPrice (price) {
             price = price ? price : 0;
             return (price).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') // with 2 d.p
+        },
+
+        getSelectedMethod(){
+            this.paymentDesc = this.payment_methods.filter(item => item.Payme == this.selectedMethod)
+            console.log(this.paymentDesc)
         }
     }
 }

@@ -15,13 +15,15 @@
 
     <div class="row">
         
-        <div class="product-card d-flex" v-for="(product, index) in filteredProduct" :key="product.id">
+        <div class="product-card d-flex" v-for="(product, index) in filteredProduct" :key="product.Title">
             <div style="box-shadow: rgba(110, 110, 110, 0.2) 0px 24px 30px -10px;">
-                <img :src="product.product_photo" class="img-fluid" alt="" data-bs-toggle="modal" data-bs-target="#productDetail" @click="getProductDetails(product.id)">
-                <h5 class="product-title">{{truncate(product.product_name, 24)}}</h5>
-                <h4 class="product-price">₦{{formatPrice(product.product_price)}}</h4>
+                <img src="https://jebsengroup.sharepoint.com/sites/Group-eForms/SiteAssets/Lists/48eb319e-ca46-43c2-bbc2-86ae3d17b3f6/純蟲草.jpg" class="img-fluid" alt="" data-bs-toggle="modal" data-bs-target="#productDetail" @click="getProductDetails(product.Title)">
+                <!-- <div style="width: 100%; height: 150px; background: whitesmoke" @click="getProductDetails(product.Title)" data-bs-toggle="modal" data-bs-target="#productDetail"></div> -->
+                <h5 class="product-title">{{truncate(product.ItemName, 24)}}</h5>
+                <h4 class="product-price">SRP: <span>${{formatPrice(product.SRP)}}</span></h4>
+                <h4 class="product-price">Staff Price: <span>${{formatPrice(product.StaffPrice)}}</span></h4>
 
-                <div v-if="($store.state.cart.filter(cart => cart.id == product.id)).length > 0" class="increaseDecreaseBtn mt-4">
+                <div v-if="($store.state.cart.filter(cart => cart.title == product.Title)).length > 0" class="increaseDecreaseBtn mt-4">
                     <button class="btn" @click="decreaseQty(product, index)"><i class="fa fa-minus" aria-hidden="true"></i></button>
                     <label :id="'qty'+ index">1</label>
                     <button class="btn" @click="increaseQty(product, index)"><i class="fa fa-plus" aria-hidden="true"></i></button>
@@ -29,6 +31,7 @@
                 <button v-else class="btn btn-block mt-4" @click="addToCart(product)">Add to Cart</button>
 
             </div>
+            
         </div>        
     </div>
 
@@ -50,29 +53,30 @@
                     </div>
                 </div>
 
-                <div class="modal-body">
-                    <img :src="this.selectedProduct[0].product_photo" class="img-fluid d-flex mx-auto" alt="" data-bs-toggle="modal" data-bs-target="#productDetail">
+                <div v-if="this.selectedProduct[0]" class="modal-body">
+                    <!-- <img :src="this.selectedProduct[0].product_photo" class="img-fluid d-flex mx-auto" alt="" data-bs-toggle="modal" data-bs-target="#productDetail"> -->
+                    <div style="width: 100%; height: 200px; background: whitesmoke" class="mb-2"></div>
                     
                     <h6>Item Code</h6>
-                    <p>{{this.selectedProduct[0].item_code}}</p>
+                    <p>{{this.selectedProduct[0].Title}}</p>
                     
                     <h6>Item Name</h6>
-                    <p>{{this.selectedProduct[0].product_name}}</p>
+                    <p>{{this.selectedProduct[0].ItemName}}</p>
 
                     <h6>Item Description 1</h6>
-                    <p>{{this.selectedProduct[0].item_desc_1}}</p>
+                    <p>{{this.selectedProduct[0].ItemDescription1}}</p>
 
                     <h6>Item Description 2</h6>
-                    <p>{{this.selectedProduct[0].item_desc_2}}</p>
+                    <p>{{this.selectedProduct[0].ItemDescription2}}</p>
 
                     <h6>SRP</h6>
-                    <p>₦{{formatPrice(this.selectedProduct[0].SRP)}}</p>
+                    <p>${{formatPrice(this.selectedProduct[0].SRP)}}</p>
 
                     <h6>Staff Price</h6>
-                    <p>₦{{formatPrice(this.selectedProduct[0].product_price)}}</p>
+                    <p>${{formatPrice(this.selectedProduct[0].StaffPrice)}}</p>
 
                     <h6>Unit</h6>
-                    <p>{{this.selectedProduct[0].unit}} {{this.selectedProduct[0].product_name}}</p>
+                    <p>{{this.selectedProduct[0].unit}} {{this.selectedProduct[0].Unit}}</p>
                 </div>
             </div>
         </div>
@@ -87,22 +91,9 @@ export default {
     name: 'SearchProducts',
     data() {
         return {
-            products: this.$store.state.products,
-            filteredProduct: this.$store.state.products,
-            selectedProduct: [
-                {
-                    id: '',
-                    product_photo: '',
-                    product_name: '',
-                    item_code: '',
-                    item_desc_1: '',
-                    item_desc_2: '',
-                    SRP: '',
-                    product_price: '',
-                    unit: '',
-                    stockqty: ''
-                },
-            ],
+            products: [],
+            filteredProduct: [],
+            selectedProduct: [],
             search_value: ''
         }
     },
@@ -113,45 +104,12 @@ export default {
     },
     mounted() { 
         this.getCartQuantity()
-        let products = [
-            {
-                id: 1,
-                product_photo: 'https://media.istockphoto.com/id/185262648/photo/red-apple-with-leaf-isolated-on-white-background.jpg?s=170667a&w=0&k=20&c=DAaUrONuIwJ3LzA66X2XO8VPndCl2_46NyNTLn-zi_o=',
-                product_name: 'Fresh Apple',
-                item_code: 'N0346',
-                item_desc_1: 'Lorem Isupm deu usim thuo',
-                item_desc_2: 'Lorem Isupm deu usim thuo',
-                SRP: 185,
-                product_price: 170,
-                unit: 10,
-                stockqty: 15
-            },
-            {
-                id: 2,
-                product_photo: 'https://www.diabete.qc.ca/wp-content/uploads/2014/08/Les-fruits-768x768.png',
-                product_name: 'Fresh Kiwi',
-                item_code: 'N0347',
-                item_desc_1: 'Lorem Isupm deu usim thuo',
-                item_desc_2: 'Lorem Isupm deu usim thuo',
-                SRP: 150,
-                product_price: 120,
-                unit: 5,
-                stockqty: 8
-            },
-            {
-                id: 3,
-                product_photo: 'https://www.freshproduceshoppe.com/wp-content/uploads/2018/09/strawberry-freshproduceshoppe-1024x1024.jpg',
-                product_name: 'Fresh Strawberry',
-                item_code: 'N0348',
-                item_desc_1: 'Lorem Isupm deu usim thuo',
-                item_desc_2: 'Lorem Isupm deu usim thuo',
-                SRP: 300,
-                product_price: 250,
-                unit: 12,
-                stockqty: 15
-            },
-        ]
-        this.$store.commit('setProducts', products)
+
+        //get product list
+        this.$store.dispatch('getProductList').then(() => {
+            this.products = this.$store.state.products.map((products) => ({ ...products, stockqty: 10 }))
+            this.filteredProduct = this.$store.state.products.map((products) => ({ ...products, stockqty: 10 }))
+        })  
     },
     computed: {
         totalItemsInCart(){
@@ -178,13 +136,13 @@ export default {
         addToCart(product){
             if(product.stockqty > 0){
                 let cart_data = {
-                    id: product.id,
-                    product_photo: product.product_photo,
-                    product_name: product.product_name,
-                    item_code: product.item_code,
-                    product_price: product.product_price,
-                    unit: product.unit,
-                    stockqty: product.stockqty,
+                    title: product.Title,
+                    product_photo: product.ItemImages,
+                    product_name: product.ItemName,
+                    item_code: product.Title,
+                    product_price: product.StaffPrice,
+                    unit: product.Unit,
+                    stockqty: 10,
                     SRP: product.SRP,
                     quantity: 1
                 }
@@ -201,7 +159,7 @@ export default {
         getCartQuantity(){
             this.products.forEach((product, index) => {        
                 this.$store.state.cart.forEach(i => {            
-                    if (i.id == product.id) {
+                    if (i.title == product.Title) {
                         $('#qty'+ index).text(i.quantity)
                     }   
                 });
@@ -209,7 +167,7 @@ export default {
         },
         removeFromCart(product){
             this.$store.state.cart.forEach((item, index) => {
-                if (item.id == product.id) {
+                if (item.title == product.Title) {
                     this.$store.state.cart.splice(index, 1) 
                     this.updateCart()          
                     this.toast.info("Item quantity updated in cart!");
@@ -218,7 +176,7 @@ export default {
         },
         increaseQty(prod, index){
             this.$store.state.cart.forEach(i => {            
-                if (i.id == prod.id) {
+                if (i.title == prod.Title) {
                     if(prod.stockqty > i.quantity){
                         $('#qty'+ index).text(++(i.quantity))
                         this.updateCart()
@@ -230,7 +188,7 @@ export default {
         },
         decreaseQty(prod, index){
             this.$store.state.cart.forEach(i => {            
-                if (i.id == prod.id) {
+                if (i.title == prod.Title) {
                     if (i.quantity == 1){
                         this.removeFromCart(prod)                        
                     }else{
@@ -246,8 +204,8 @@ export default {
             return (price).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') // with 2 d.p
             // return (price).replace(/\d(?=(\d{3})+\.)/g, '$&,')
         },
-        getProductDetails(id) {
-            this.selectedProduct = this.products.filter(product => product.id == id)
+        getProductDetails(Title) {
+            this.selectedProduct = this.products.filter(product => product.Title == Title)
         }
     }
 }
@@ -279,9 +237,14 @@ export default {
 
     .product-card .product-price {
         margin-top: 12px;
-        color: var(--green);
+        /* color: var(--green); */
+        font-size: 20px;
         text-align: center;
     } 
+
+    .product-card .product-price span {
+        color: var(--green);
+    }
 
     .product-card button {
         font-weight: 600;
@@ -345,7 +308,11 @@ export default {
         }
 
         .product-card .product-price {
-            font-size: 22px;
+            font-size: 18px;
+        }
+
+        .product-card .product-price span {
+            color: var(--green);
         }
 
         .product-card .product-title {

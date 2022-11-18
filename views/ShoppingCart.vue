@@ -21,17 +21,17 @@
         <div style="overflow-y: scroll; height: 30rem" class="justify-content-center" v-if="cart.length > 0">
             <div class="row py-3" v-for="(item, index) in cart" :key="item.id">
                 <div class="col-4">
-                    <img :src="item.product_photo" class="img-fluid" alt="" style="width: 200px">
+                    <!-- <img :src="item.product_photo" class="img-fluid" alt="" style="width: 200px"> -->
                 </div>
                 <div class="col-6">
                     <h5 class="product-title">{{item.product_name}}</h5>
-                    <h4 class="product-price">₦{{formatPrice(item.product_price * item.quantity)}}</h4>
+                    <h4 class="product-price">${{formatPrice(item.product_price * item.quantity)}}</h4>
                     <div class="d-flex justify-content-start align-items-center">
                         <h5 class="my-3 mr-2">Qty: </h5> <input type="number" :id="'qty'+ index" @change="updateCartQty(item, index)" :value="item.quantity" class="form-control text-center" style="width: 60px">
                     </div>
                     <div class="text-secondary mt-3">
-                        <h5>SRP: ₦{{formatPrice(item.SRP)}}</h5>
-                        <h5>₦{{formatPrice(item.product_price)}} per {{item.unit}} unit(s)</h5>
+                        <h5>SRP: ${{formatPrice(item.SRP)}}</h5>
+                        <h5>${{formatPrice(item.product_price)}} per {{item.unit}}</h5>
                     </div>
                 </div>
                 <div class="col-2 d-flex justify-content-end">
@@ -42,7 +42,7 @@
 
         <div v-if="cart.length > 0" class="d-flex justify-content-between my-4">
             <h4>Total</h4>
-            <h4 class="total">₦{{formatPrice(subtotal)}}</h4>
+            <h4 class="total">${{formatPrice(subtotal)}}</h4>
         </div>
     </div>
 
